@@ -128,8 +128,11 @@ function App() {
     }));
 
     try {
+      console.log('Starting search for document chunk:', documentChunkId);
+      
       // Get access token
       const accessToken = await getAccessToken();
+      console.log('Access token obtained successfully');
       
       // Fetch document chunk
       const documentChunk = await KnowledgeApiService.fetchDocumentChunk(
@@ -137,11 +140,17 @@ function App() {
         accessToken
       );
 
+      console.log('Document chunk received:', documentChunk);
+      console.log('Document chunk metadata:', documentChunk?.metadata);
+      console.log('Document chunk content:', documentChunk?.content);
+
       setState(prev => ({
         ...prev,
         isLoading: false,
         documentChunk,
       }));
+      
+      console.log('State updated with document chunk');
     } catch (error) {
       console.error('Search failed:', error);
       setState(prev => ({
@@ -267,6 +276,16 @@ function App() {
                   content={state.documentChunk.content} 
                   isLoading={state.isLoading}
                 />
+              </div>
+            )}
+            
+            {/* Debug information in development */}
+            {process.env.NODE_ENV === 'development' && state.documentChunk && (
+              <div style={{ marginTop: '20px', padding: '10px', backgroundColor: '#f0f0f0', fontSize: '12px' }}>
+                <details>
+                  <summary>Debug: Raw Document Chunk Data</summary>
+                  <pre>{JSON.stringify(state.documentChunk, null, 2)}</pre>
+                </details>
               </div>
             )}
           </>

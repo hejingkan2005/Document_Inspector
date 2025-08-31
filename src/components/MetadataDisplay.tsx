@@ -2,16 +2,16 @@ import React from 'react';
 import './MetadataDisplay.css';
 
 interface DocumentMetadata {
-  'document-chunk-id': string;
-  url?: string;
+  id: string;
   title?: string;
-  'depot-name'?: string;
-  'last-updated-at'?: string;
-  'page-type'?: string;
+  lastUpdated?: string;
+  depotName?: string;
+  pageType?: string;
+  url?: string;
 }
 
 interface MetadataDisplayProps {
-  metadata: DocumentMetadata;
+  metadata: DocumentMetadata | null | undefined;
 }
 
 const MetadataDisplay: React.FC<MetadataDisplayProps> = ({ metadata }) => {
@@ -24,13 +24,30 @@ const MetadataDisplay: React.FC<MetadataDisplayProps> = ({ metadata }) => {
     }
   };
 
+  // Handle case where metadata is undefined or null
+  if (!metadata) {
+    return (
+      <div className="metadata-container">
+        <h2 className="metadata-title">Document Metadata</h2>
+        <div className="metadata-error">
+          <p>⚠️ No metadata available for this document chunk.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="metadata-container">
       <h2 className="metadata-title">Document Metadata</h2>
       <div className="metadata-grid">
         <div className="metadata-item">
-          <label className="metadata-label">Document Chunk ID:</label>
-          <span className="metadata-value">{metadata['document-chunk-id']}</span>
+          <label className="metadata-label">Document ID:</label>
+          <span className="metadata-value">{metadata.id || 'N/A'}</span>
+        </div>
+        
+        <div className="metadata-item">
+          <label className="metadata-label">Title:</label>
+          <span className="metadata-value">{metadata.title || 'N/A'}</span>
         </div>
         
         <div className="metadata-item">
@@ -47,23 +64,18 @@ const MetadataDisplay: React.FC<MetadataDisplayProps> = ({ metadata }) => {
         </div>
         
         <div className="metadata-item">
-          <label className="metadata-label">Title:</label>
-          <span className="metadata-value">{metadata.title || 'N/A'}</span>
-        </div>
-        
-        <div className="metadata-item">
           <label className="metadata-label">Depot Name:</label>
-          <span className="metadata-value">{metadata['depot-name'] || 'N/A'}</span>
+          <span className="metadata-value">{metadata.depotName || 'N/A'}</span>
         </div>
         
         <div className="metadata-item">
           <label className="metadata-label">Last Updated:</label>
-          <span className="metadata-value">{formatDate(metadata['last-updated-at'])}</span>
+          <span className="metadata-value">{formatDate(metadata.lastUpdated)}</span>
         </div>
         
         <div className="metadata-item">
           <label className="metadata-label">Page Type:</label>
-          <span className="metadata-value">{metadata['page-type'] || 'N/A'}</span>
+          <span className="metadata-value">{metadata.pageType || 'N/A'}</span>
         </div>
       </div>
     </div>

@@ -1,11 +1,11 @@
 // Types for the Knowledge API response
 export interface DocumentMetadata {
-  'document-chunk-id': string;
-  url?: string;
+  id: string;
   title?: string;
-  'depot-name'?: string;
-  'last-updated-at'?: string;
-  'page-type'?: string;
+  lastUpdated?: string;
+  depotName?: string;
+  pageType?: string;
+  url?: string;
 }
 
 export interface DocumentChunk {
@@ -61,8 +61,15 @@ export class KnowledgeApiService {
         }
       }
 
-      const data: KnowledgeApiResponse = await response.json();
-      return data.itemSpec;
+      const data: any = await response.json();
+      console.log('Raw API response data:', data);
+      console.log('API response structure:', JSON.stringify(data, null, 2));
+      
+      // Extract and transform the metadata and content from the raw response
+      const transformedChunk = this.transformApiResponse(data, documentChunkId);
+      console.log('Transformed document chunk:', transformedChunk);
+      
+      return transformedChunk;
     } catch (error) {
       console.error('API Error details:', error);
       
@@ -72,6 +79,73 @@ export class KnowledgeApiService {
       
       throw new Error('An unexpected error occurred while fetching the document');
     }
+  }
+
+  /**
+   * Transform the raw API response into our standardized DocumentChunk format
+   * @param rawData - The raw API response
+   * @param documentChunkId - The requested document chunk ID for fallback
+   * @returns DocumentChunk with transformed metadata
+   */
+  private static transformApiResponse(rawData: any, documentChunkId: string): DocumentChunk {
+    console.log('Transforming API response:', rawData);
+    
+    // Try different possible response structures
+    let responseData = rawData;
+    
+    // Check if the data is wrapped in itemSpec
+    if (rawData.itemSpec) {
+      responseData = rawData.itemSpec;
+      console.log('Using itemSpec from response');
+    }
+    
+    // Extract metadata from various possible locations in the response
+    const extractMetadata = (data: any): DocumentMetadata => {
+      // Try to find metadata in different locations
+      const metadataSource = data.metadata || data;
+      
+      return {
+        id: metadataSource['document-chunk-id'] || 
+            metadataSource.id || 
+            metadataSource.documentChunkId || 
+            documentChunkId,
+        title: metadataSource.title || 
+               metadataSource.displayName || 
+               'Untitled Document',
+        lastUpdated: metadataSource['last-updated-at'] || 
+                    metadataSource.lastUpdated || 
+                    metadataSource.lastModified || 
+                    metadataSource.updatedAt,
+        depotName: metadataSource['depot-name'] || 
+                  metadataSource.depotName || 
+                  metadataSource.depot || 
+                  metadataSource.source,
+        pageType: metadataSource['page-type'] || 
+                 metadataSource.pageType || 
+                 metadataSource.type || 
+                 metadataSource.contentType,
+        url: metadataSource.url || 
+             metadataSource.link || 
+             metadataSource.href
+      };
+    };
+    
+    // Extract content from various possible locations
+    const extractContent = (data: any): string => {
+      return data.content || 
+             data.body || 
+             data.text || 
+             data.markdown || 
+             'No content available';
+    };
+    
+    const transformedChunk: DocumentChunk = {
+      metadata: extractMetadata(responseData),
+      content: extractContent(responseData)
+    };
+    
+    console.log('Transformed metadata:', transformedChunk.metadata);
+    return transformedChunk;
   }
 
   /**

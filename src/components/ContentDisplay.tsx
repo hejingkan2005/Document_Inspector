@@ -3,7 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import './ContentDisplay.css';
 
 interface ContentDisplayProps {
-  content: string;
+  content: string | null | undefined;
   isLoading?: boolean;
 }
 

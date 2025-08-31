@@ -18,8 +18,8 @@ A React TypeScript application for inspecting document chunks from the Microsoft
 - Node.js (version 16 or later)
 - npm or yarn package manager
 - Microsoft Entra ID application registration with the following:
-  - Client ID: `fd972449-9448-4dce-9df1-c1edac7b2225`
-  - Delegated permissions for the Knowledge API scope: `api://5405974b-a0ac-4de0-80e0-9efe337ea291/access_as_user`
+  - Client ID: `5405974b-a0ac-4de0-80e0-9efe337ea291`
+  - Delegated permissions for the Knowledge API scope: `api://5405974b-a0ac-4de0-80e0-9efe337ea291/user_impersonation`
   - Microsoft Graph User.Read permission for basic user profile
 - A Microsoft work or school account with access to the Knowledge API
 
