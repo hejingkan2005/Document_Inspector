@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useMsal } from '@azure/msal-react';
-import { loginRequest, tokenRequest, knowledgeApiTokenRequest, fallbackTokenRequest } from './authConfig';
+import { loginRequest, knowledgeApiTokenRequest, fallbackTokenRequest } from './authConfig';
 import { KnowledgeApiService, DocumentChunk } from './services/knowledgeApi';
 import DocumentSearch from './components/DocumentSearch';
 import MetadataDisplay from './components/MetadataDisplay';
