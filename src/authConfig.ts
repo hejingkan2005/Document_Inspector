@@ -28,7 +28,7 @@ export const tokenRequest = {
 
 // Alternative token request for Knowledge API (if available)
 export const knowledgeApiTokenRequest = {
-  scopes: ['api://5405974b-a0ac-4de0-80e0-9efe337ea291/user_impersonation'],
+  scopes: ['api://7c78db7f-b420-4cb8-b448-fc0015661260/user_impersonation'],
   forceRefresh: false,
 };
 

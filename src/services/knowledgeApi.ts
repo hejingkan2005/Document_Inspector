@@ -18,7 +18,7 @@ export interface KnowledgeApiResponse {
 }
 
 export class KnowledgeApiService {
-  private static readonly BASE_URL = process.env.REACT_APP_KNOWLEDGE_API_BASE_URL || 'https://learn.microsoft.com/api/knowledge/document';
+  private static readonly BASE_URL = process.env.REACT_APP_KNOWLEDGE_API_BASE_URL || 'https://learnknowledge-int.azurewebsites.net/api/document';
 
   /**
    * Fetch document chunk by ID using user delegated permissions
